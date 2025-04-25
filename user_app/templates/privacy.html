@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy - What3Trees</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lora:wght@400;600&display=swap');
+
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f4f4f4, #e8f5e9);
+            color: #2c3e50;
+        }
+
+        nav {
+            background: #2c3e50;
+            color: white;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #1abc9c;
+        }
+
+        .container {
+            max-width: 80%;
+            margin: 40px auto;
+            padding: 30px;
+            background: transparent;
+            border-radius: 10px;
+
+        }
+
+        h1 {
+            font-family: "Lora", serif;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 50px;
+        }
+        h2 {
+            font-family: "Lora", serif;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: #1abc9c;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            color: #16a085;
+            text-decoration: underline;
+        }
+
+        .footer p {
+            color: white;
+        }
+        .section-separator {
+            width: 80%;
+            margin: 50px auto;
+            height: 2px;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0), #ccc, rgba(0, 0, 0, 0));
+            border-radius: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/what3trees_nav_logo.png') }}" alt="What3Trees Logo">
+            </a>
+        </div>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            {% if session.get("user_id") %}
+                <li><a href="{{ url_for('user_trees') }}">My Trees</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('register') }}">Sign Up</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Privacy Policy</h1>
+        <h2><strong>Effective Date: 02 April 2025</strong></h2>
+        <h2><strong>Last Updated: 02 April 2025</strong></h2>
+
+        <div class="section-separator"></div>
+
+        <h3>Introduction</h3>
+        <p>At <strong>What3Trees</strong>, your privacy matters. We are committed to protecting your personal information and being transparent about how we use it. This Privacy Policy explains what data we collect, how we use it, and how we keep it secure.</p>
+
+        <h3>Data We Collect</h3>
+        <p>When you create an account on our site, we collect the following personal information:</p>
+        <ul>
+            <li>First Name</li>
+            <li>Last Name</li>
+            <li>Email Address</li>
+            <li>Password (encrypted)</li>
+        </ul>
+
+        <p>We do <strong>not</strong> collect or store payment details. All financial transactions are handled securely by <strong>Stripe</strong>.</p>
+
+        <h3>How We Use Your Data</h3>
+        <p>We only use your personal information for the following purposes:</p>
+        <ul>
+            <li>To create and manage your account</li>
+            <li>To provide sponsorship services (e.g., linking you to your tree’s geolocation)</li>
+            <li>To respond to inquiries you send us via email</li>
+        </ul>
+
+        <p>We do <strong>not</strong> use your data for marketing, profiling, or analytical purposes.</p>
+
+        <h3>Data Security</h3>
+        <p>All user data is stored securely using <strong>Google Firebase</strong>, with encryption handled via <strong>AES-256</strong> encryption standards. We take all reasonable steps to ensure that your information is stored securely and protected from unauthorized access.</p>
+
+        <h3>Third-Party Sharing</h3>
+        <p>We do <strong>not</strong> share, sell, or disclose your data to any third-party organizations. All data remains under our control and is used solely for the delivery of our tree sponsorship service.</p>
+
+        <h3>Cookies and Tracking</h3>
+        <p>We do <strong>not</strong> use cookies, tracking pixels, or any form of analytics software. Your activity on our website is not monitored or profiled in any way.</p>
+
+        <h3>Payment Processing</h3>
+        <p>Payments on our platform are handled by <strong>Stripe</strong>. We do not have access to your credit card details or payment information. Please refer to Stripe’s privacy policy for more information on how your financial data is handled.</p>
+
+        <h3>Your Rights (GDPR)</h3>
+        <p>You are protected under the General Data Protection Regulation (GDPR). You have the right to:</p>
+        <ul>
+            <li>Access the data we hold about you</li>
+            <li>Request correction of inaccurate data</li>
+            <li>Request deletion of your personal data</li>
+            <li>Withdraw consent at any time</li>
+        </ul>
+        <p>To exercise any of these rights, please contact us via email.</p>
+
+        <h3>Data Retention</h3>
+        <p>We retain your data for as long as your account is active. If you choose to delete your account or request data erasure, your information will be permanently removed from our systems unless legally required to retain it.</p>
+
+        <h3>Changes to This Policy</h3>
+        <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated date. Continued use of the site indicates your acceptance of the changes.</p>
+
+        <h3>Contact</h3>
+        <p>If you have any questions or concerns about our privacy practices, contact us at:</p>
+        <p><strong>Email:</strong> support@what3trees.org</p>
+    </div>
+
+
+
+    <div class="footer">
+        <p>&copy; 2025 What3Trees. All rights reserved.</p>
+        <p>
+            <a href="{{ url_for('terms_and_conditions') }}">Terms & Conditions</a> |
+            <a href="{{ url_for('privacy_policy') }}">Privacy Policy</a>
+        </p>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact - What3Trees</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lora:wght@400;600&display=swap');
+
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(to bottom, #f4f4f4, #e8f5e9);
+      color: #2c3e50;
+    }
+
+    nav {
+      background: #2c3e50;
+      color: white;
+      padding: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .logo img {
+      height: 60px;
+      width: auto;
+      display: block;
+    }
+
+    nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+    }
+
+    nav ul li {
+      margin: 0 15px;
+    }
+
+    nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+
+    nav ul li a:hover {
+      color: #1abc9c;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-bottom: 40px;
+    }
+
+    .heading_container {
+      text-align: center;
+      margin-top: 60px;
+      margin-bottom: 40px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto 30px auto;
+      padding: 30px;
+      text-align: center;
+    }
+
+    h1, h2, h3 {
+      font-family: "Lora", serif;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      font-size: 48px;
+    }
+
+    h2 {
+      font-size: 36px;
+    }
+
+    h3 {
+      font-size: 20px;
+      font-weight: 400;
+    }
+
+    p {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+
+    .section-separator {
+      width: 80%;
+      margin: 40px auto;
+      height: 2px;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0), #ccc, rgba(0, 0, 0, 0));
+      border-radius: 1px;
+    }
+
+    .footer {
+        background: #2c3e50;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        font-size: 14px;
+        width: 100%;
+        position: relative; /* Allows content to push it down naturally */
+        bottom: 0;
+        margin-top: 40px; /* Creates spacing between content and footer */
+        box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    }
+
+    .footer a {
+        color: #1abc9c;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s;
+        margin: 0 10px;
+    }
+
+    .footer a:hover {
+        color: #16a085;
+        text-decoration: underline;
+    }
+    .footer p {
+        color: white;
+    }
+    .email-link {
+      color: #1abc9c;
+      text-decoration: none;
+      position: relative;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .email-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 0%;
+      height: 2px;
+      background-color: #1abc9c;
+      transition: width 0.3s ease;
+    }
+
+    .email-link:hover {
+      color: #16a085;
+    }
+
+    .email-link:hover::after {
+      width: 100%;
+    }
+
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">
+      <a href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='images/what3trees_nav_logo.png') }}" alt="What3Trees Logo" />
+      </a>
+    </div>
+    <ul>
+      <li><a href="{{ url_for('home') }}">Home</a></li>
+      <li><a href="{{ url_for('about') }}">About</a></li>
+      <li><a href="{{ url_for('contact') }}">Contact</a></li>
+      {% if session.get("user") %}
+        <li><a href="{{ url_for('user_trees') }}">My Trees</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      {% else %}
+        <li><a href="{{ url_for('register') }}">Sign Up</a></li>
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <div class="main-content">
+    <div class="heading_container">
+      <h1>Contact What3Trees</h1>
+    </div>
+
+    <div class="section-separator"></div>
+
+    <div class="container">
+      <h2>Need Help?</h2>
+      <h3>
+        Get in touch at 
+        <a href="mailto:support@what3trees.org" class="email-link">support@what3trees.org</a>
+      </h3>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <p>&copy; 2025 What3Trees. All rights reserved.</p>
+    <p>
+      <a href="{{ url_for('terms_and_conditions') }}">Terms & Conditions</a> |
+      <a href="{{ url_for('privacy_policy') }}">Privacy Policy</a>
+    </p>
+  </div>
+
+</body>
+</html>

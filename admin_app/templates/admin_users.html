@@ -1,0 +1,242 @@
+<!-- templates/admin_users.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Users - What3Trees</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        .admin-nav {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .admin-nav a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .admin-nav a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        form {
+            margin-bottom: 25px;
+            background-color: transparent;
+            max-width: 400px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            background-color: #fff;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus {
+            border-color: #007bff;
+        }
+
+
+
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 8px 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            background-color: #ffffff;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #e9e9e9;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="admin-nav">
+        <a href="/">Admin Panel</a>
+        <a href="/admin-users">Admin Users</a>
+        <a href="/admin-map">Full Map</a>
+    </div>
+
+    <h1>Admin Users</h1>
+    <h4>Add a new User:</h4>
+    <form id="adminUserForm" onsubmit="submitAdminUserForm(event)">
+        <label>Email:</label><br>
+        <input type="email" id="adminEmail" required><br><br>
+
+        <label>Password:</label><br>
+        <input type="password" id="adminPassword" required><br><br>
+
+        <label>
+            <input type="checkbox" id="isSuperUser">
+            Make Super User
+        </label><br><br>
+
+        <button type="submit">Create Admin</button>
+    </form>
+
+    <hr>
+
+    <table id="adminUsersTable">
+        <thead>
+            <tr>
+                <th>User Email</th>
+                <th>User Password</th>
+                <th>Is Super User</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+
+    <script>
+        async function loadAdminUsers() {
+            try {
+                const res = await fetch('/get-admin-users');
+                const data = await res.json();
+
+                if (data.error) {
+                    console.error("❌ Failed to load admin users:", data.error);
+                    return;
+                }
+
+                const tbody = document.querySelector('#adminUsersTable tbody');
+                tbody.innerHTML = '';
+
+                data.forEach(user => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${user.UserEmail}</td>
+                        <td>${user.UserPassword}</td>
+                        <td>${user.IsSuperUser}</td>
+                        <td><button onclick="deleteAdminUser('${user.UserEmail}')">Delete</button></td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+            } catch (err) {
+                console.error("❌ Error loading admin users:", err);
+            }
+        }
+
+        loadAdminUsers();
+
+        async function submitAdminUserForm(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const isSuperUser = document.getElementById('isSuperUser').checked;
+
+            const payload = { email, password, isSuperUser };
+
+            try {
+                const res = await fetch('/create-admin-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert("✅ Admin user created.");
+                    document.getElementById('adminUserForm').reset();
+                    loadAdminUsers();
+                } else {
+                    alert("❌ Error: " + (data.error || "Unknown error"));
+                }
+            } catch (err) {
+                console.error("❌ Submission failed:", err);
+                alert("❌ Failed to create admin user.");
+            }
+        }
+
+        async function deleteAdminUser(email) {
+            const confirmDelete = confirm(`Are you sure you want to delete admin user: ${email}?`);
+            if (!confirmDelete) return;
+
+            try {
+                const res = await fetch('/delete-admin-user', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert("✅ Admin user deleted.");
+                    loadAdminUsers();
+                } else {
+                    alert("❌ Failed to delete: " + (data.error || "Unknown error"));
+                }
+            } catch (err) {
+                console.error("❌ Delete error:", err);
+                alert("❌ Something went wrong.");
+            }
+        }
+
+
+    </script>
+</body>
+</html>

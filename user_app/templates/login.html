@@ -1,0 +1,167 @@
+<!-- templates/login.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - What3Trees</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Import Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lora:wght@400;600&display=swap" rel="stylesheet">
+    <!-- login.html -->
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f4f4f4, #e8f5e9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .login-container {
+            background: white;
+            padding: 20px 10px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-family: "Lora", serif;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        form label {
+            width: 80%;
+            max-width: 400px;
+            text-align: left;
+            font-weight: 600;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        form input {
+            width: 80%;
+            max-width: 400px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background: #1abc9c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: 50%;
+            max-width: 200px;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background: #16a085;
+        }
+
+        p {
+            font-size: 14px;
+            margin-top: 20px;
+            color: #555;
+        }
+
+        a {
+            color: #1abc9c;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #16a085;
+            text-decoration: underline;
+        }
+
+        .flash-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .flash-message.success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        .logo {
+            width: 250px;
+            max-width: 80%;
+            height: auto;
+            margin-bottom: 20px;
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.1));
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="login-container">
+        <img src="{{ url_for('static', filename='images/what3trees_logo.png') }}" alt="What3Trees Logo" class="logo">
+        <h1>Login</h1>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div>
+              {% for category, message in messages %}
+                <div class="flash-message {{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" required>
+
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" required>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p>Don't have an account? <a href="{{ url_for('register') }}">Register here</a></p>
+    </div>
+</body>
+
+</html>

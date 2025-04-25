@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment
+.env
+serviceAccountKey.json
+
+# System
+.DS_Store
+
+# Others
+*.xlsx
+

@@ -1,0 +1,2 @@
+web: gunicorn admin_app.admin:app
+

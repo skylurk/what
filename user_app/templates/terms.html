@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms - What3Trees</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lora:wght@400;600&display=swap');
+
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f4f4f4, #e8f5e9);
+            color: #2c3e50;
+        }
+
+        nav {
+            background: #2c3e50;
+            color: white;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #1abc9c;
+        }
+
+        .container {
+            max-width: 80%;
+            margin: 40px auto;
+            padding: 30px;
+            background: transparent;
+            border-radius: 10px;
+
+        }
+
+        h1 {
+            font-family: "Lora", serif;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 50px;
+        }
+        h2 {
+            font-family: "Lora", serif;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            margin-top: 40px;
+        }
+
+        .footer a {
+            color: #1abc9c;
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            color: #16a085;
+            text-decoration: underline;
+        }
+
+        .footer p {
+            color: white;
+        }
+        .section-separator {
+            width: 80%;
+            margin: 50px auto;
+            height: 2px;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0), #ccc, rgba(0, 0, 0, 0));
+            border-radius: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">
+            <a href="{{ url_for('home') }}">
+                <img src="{{ url_for('static', filename='images/what3trees_nav_logo.png') }}" alt="What3Trees Logo">
+            </a>
+        </div>
+        <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('about') }}">About</a></li>
+            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            {% if session.get("user_id") %}
+                <li><a href="{{ url_for('user_trees') }}">My Trees</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            {% else %}
+                <li><a href="{{ url_for('register') }}">Sign Up</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h1>Terms and Conditions</h1>
+        <h2><strong>Effective Date:</strong> 02 April 2025</h2>
+        <h2><strong>Last Updated:</strong> 02 April 2025</h2>
+
+        <div class="section-separator"></div>
+
+        <h3>Overview</h3>
+        <p>Welcome to <strong>what3trees.org</strong>, a platform dedicated to reforestation and transparent environmental impact. By sponsoring a tree through our site, you directly support sustainable development initiatives and receive a geolocated view of your contribution using What3Words and Google Maps.</p>
+
+        <h3>Our Mission and Services</h3>
+        <p>We aim to address global reforestation challenges with accountability. Every tree sponsored through What3Trees is part of a verified ecological effort along the Kenyan coast near Malindi, where we plant primarily coconut trees due to their environmental and economic value. Sponsors receive:</p>
+        <ul>
+            <li>A unique geolocation of their tree(s)</li>
+            <li>Future access to satellite imagery (via SkyFi integration)</li>
+            <li>Ongoing updates on tree growth milestones</li>
+        </ul>
+
+        <h3>User Accounts</h3>
+        <p>To sponsor a tree, you must create an account and provide your first name, last name, email, and password. You are responsible for the security of your account. We reserve the right to suspend accounts that are inactive, abusive, or fraudulent.</p>
+
+        <h3>Sponsorship and Pricing</h3>
+        <p>Each tree sponsorship is €25. This includes seedling procurement, irrigation, care, and digital geolocation delivery. Our operations are long-term: we commit to maintaining trees for 5–6 years until they are self-sustaining.</p>
+        <p><strong>Refund Policy:</strong> All sponsorships are final and non-refundable. Once a tree is assigned, geolocation data is generated and resources are allocated toward planting and maintenance.</p>
+
+        <h3>Environmental Impact Disclaimer</h3>
+        <p>We provide estimates of environmental benefits (e.g., CO₂ absorption) based on scientific studies and observed data. However, actual environmental impact may vary due to location, weather, and ecological factors.</p>
+
+        <h3>Verification and Technology</h3>
+        <p>To promote transparency, we use third-party services such as:</p>
+        <ul>
+            <li><strong>What3Words</strong> – for precise location tagging</li>
+            <li><strong>Google Maps</strong> – for interactive visual display</li>
+            <li><strong>SkyFi</strong> – for future replacement of Google Maps</li>
+        </ul>
+        <p>While we strive for accuracy, we cannot guarantee the performance or availability of these third-party platforms.</p>
+
+        <h3>Payment Processing</h3>
+        <p>All payments are securely processed via <strong>Stripe</strong>. By sponsoring a tree, you also agree to Stripe’s terms and privacy policies.</p>
+
+        <h3>Intellectual Property</h3>
+        <p>The website content, branding, graphics, and underlying platform are owned by What3Trees. You may not reuse, reproduce, or redistribute any part of this site without express written permission.</p>
+
+        <h3>Liability</h3>
+        <p>We are not liable for delays or disruptions caused by natural disasters, political instability, or other unforeseen events affecting our planting sites. Our goal is transparency and sustainability, but tree survival is subject to real-world variables.</p>
+
+        <h3>Termination</h3>
+        <p>We reserve the right to terminate user access for violation of these Terms, misuse of the platform, or fraudulent activity. Users may delete their accounts at any time by contacting support.</p>
+
+        <h3>Updates to Terms</h3>
+        <p>We may revise these Terms periodically. The most recent version will always be available on our website. Continued use of the site implies acceptance of any updated Terms.</p>
+
+        <h3>Contact Us</h3>
+        <p>If you have any questions or concerns about these Terms, feel free to reach out:</p>
+        <p><strong>Email:</strong> support@what3trees.org</p>
+    </div>
+
+
+    <div class="footer">
+        <p>&copy; 2025 What3Trees. All rights reserved.</p>
+        <p>
+            <a href="{{ url_for('terms_and_conditions') }}">Terms & Conditions</a> |
+            <a href="{{ url_for('privacy_policy') }}">Privacy Policy</a>
+        </p>
+    </div>
+
+</body>
+</html>

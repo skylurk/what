@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - What3Trees</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lora:wght@400;600&display=swap');
+
+        body {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f4f4f4, #e8f5e9);
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        nav {
+            background: #2c3e50;
+            color: white;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo img {
+            height: 60px; /* Adjust height as needed */
+            width: auto;  /* Maintain aspect ratio */
+            display: block;
+        }
+
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #1abc9c;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 10px auto;
+            padding: 30px;
+            text-align: left;
+            background: transparent; /* ✅ Fully transparent */
+        }
+        .heading_container {
+            text-align: center;
+            margin: 60px auto;
+        }
+
+        h1, h2, h3 {
+            font-family: "Lora", serif;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        h1 {
+            font-size: 50px;
+        }
+
+        p {
+            font-family: "Poppins", sans-serif;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .section-separator {
+            width: 80%;
+            margin: 50px auto;
+            height: 2px;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0), #ccc, rgba(0, 0, 0, 0));
+            border-radius: 1px;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            width: 100%;
+            position: relative; /* Allows content to push it down naturally */
+            bottom: 0;
+            margin-top: 40px; /* Creates spacing between content and footer */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+
+        .footer a {
+            color: #1abc9c;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            color: #16a085;
+            text-decoration: underline;
+        }
+        .footer p {
+            color: white;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+      <div class="logo">
+        <a href="{{ url_for('home') }}">
+          <img src="{{ url_for('static', filename='images/what3trees_nav_logo.png') }}" alt="What3Trees Logo" />
+        </a>
+      </div>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('about') }}">About</a></li>
+        <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        {% if session.get("user") %}
+          <li><a href="{{ url_for('user_trees') }}">My Trees</a></li>
+          <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        {% else %}
+          <li><a href="{{ url_for('register') }}">Sign Up</a></li>
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+
+    <div class="heading_container">
+        <h1>About What3Trees</h1>
+    </div>
+
+    <div class="section-separator"></div>
+
+    <div class="container">
+        <h2>Who Are We</h2>
+        <p>What3Trees is dedicated to reforestation and carbon offsetting. Using What3Words grid technology and soon, high-resolution satellite imagery, we will provide verifiable proof of tree growth, ensuring transparency and accountability.</p>
+    </div>
+
+    <div class="section-separator"></div>
+
+    <div class="container">
+        <h2>Our Mission</h2>
+        <p>Effective reforestation requires transparency. Many tree-planting initiatives lack verification, leaving donors uncertain. What3Trees will provide half-yearly updated sattelite images, allowing contributors to track tree growth and impact.</p>
+    </div>
+
+    <div class="section-separator"></div>
+
+    <div class="container">
+        <h2>Reforestation Efforts</h2>
+        <p>We focus on reforesting a rural area along the Kenyan coast near Malindi, primarily with coconut trees. These trees support local communities economically and environmentally, contributing to sustainable development, and high carbon sequestration.</p>
+    </div>
+
+    <div class="section-separator"></div>
+
+    <div class="container">
+        <h2>Tracking Growth</h2>
+        <p>Through our upcoming involvement with SkyFi, we will provide half-yearly updated high-resolution satellite imagery of planted trees, offering a clear and verifiable record of their growth over time.</p>
+    </div>
+
+    <div class="section-separator"></div>
+
+    <div class="container">
+        <h2>Tree Planting Costs</h2>
+        <p>Planting and maintaining a coconut tree until it becomes self-sustaining (5-6 years) costs 30 Euros. This includes:</p>
+        <p>✔️ Seedling procurement costs</p>
+        <p>✔️ Water and irrigation costs</p>
+        <p>✔️ Workforce and ongoing care</p>
+        <p>Each contribution directly supports reforestation efforts and environmental sustainability.</p>
+    </div>
+
+    <div class="section-separator"></div>
+
+    <div class="container">
+        <h2>Environmental Impact</h2>
+        <p>A single coconut tree absorbs approximately 3.8 to 3.9 tonnes of CO₂ over its 60-70 year lifespan. Offsetting an average UK resident's annual carbon footprint (12.7 tonnes) requires planting about four trees per year.</p>
+        <p>Our satellite imagery ensures that every contribution results in measurable reforestation.</p>
+    </div>
+
+    <div class="section-separator"></div>
+
+    <div class="footer">
+        <p>&copy; 2025 What3Trees. All rights reserved.</p>
+        <p>
+            <a href="{{ url_for('terms_and_conditions') }}">Terms & Conditions</a> |
+            <a href="{{ url_for('privacy_policy') }}">Privacy Policy</a>
+        </p>
+    </div>
+</body>
+</html>

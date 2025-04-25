@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your App Page</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        /* Page Layout */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 70px); /* subtract nav height */
+        }
+
+        .sidebar {
+            width: 30%;
+            background-color: #f4f4f4;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .map-container, .map-wrapper {
+            width: 70%;
+            height: 100%;
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background: #2c3e50;
+            color: white;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo img {
+            height: 60px;
+            width: auto;
+            display: block;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #1abc9c;
+        }
+
+        .sidebar h2 {
+            margin: 0 0 10px 0;
+        }
+
+        .sidebar p {
+            margin: 0 0 10px 0;
+        }
+
+        .sidebar .section-separator {
+            width: 90%;
+            margin: 30px auto;
+            height: 2px;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0), #ccc, rgba(0, 0, 0, 0));
+            border-radius: 1px;
+        }
+
+        .user-stats {
+            margin-top: 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .user-stats h3 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .user-stats p {
+            margin: 6px 0;
+            font-size: 16px;
+        }
+
+        /* === Transaction Table Section === */
+        .transaction-table {
+            margin-top: 15px;
+        }
+
+        .transaction-table h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .table-scroll {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+        }
+
+        .table-scroll table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 15px;
+        }
+
+        .table-scroll th,
+        .table-scroll td {
+            text-align: left;
+            padding: 8px 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .table-scroll th {
+            background-color: #f9f9f9;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+
+        .table-scroll tbody tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        .table-scroll tr:last-child td {
+            border-bottom: none;
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 13px;
+            color: white;
+            background-color: #aaa;
+            white-space: nowrap;
+        }
+
+        .status-allocated {
+            background-color: #27ae60;
+        }
+
+        .status-pending {
+            background-color: #f39c12;
+        }
+
+        .status-failed {
+            background-color: #e74c3c;
+        }
+
+        /* === Zoom Lens Viewer === */
+        #zoomView {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-color: #e8f5e9;
+            border-radius: 100px;
+            overflow: hidden;
+            z-index: 9999;
+            display: none;
+            pointer-events: none;
+        }
+
+        #zoom-map {
+            width: 100%;
+            height: 100%;
+        }
+        #zoominfo {
+            font-size: 12px;
+        }
+    </style>
+
+</head>
+<body>
+  <!-- Navigation Bar -->
+  <nav>
+    <div class="logo">
+      <a href="{{ url_for('home') }}">
+        <img src="{{ url_for('static', filename='images/what3trees_nav_logo.png') }}" alt="What3Trees Logo" />
+      </a>
+    </div>
+    <ul>
+      <li><a href="{{ url_for('home') }}">Home</a></li>
+      <li><a href="{{ url_for('about') }}">About</a></li>
+      <li><a href="{{ url_for('contact') }}">Contact</a></li>
+      {% if session.get("user") %}
+        <li><a href="{{ url_for('user_trees') }}">My Trees</a></li>
+        <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      {% else %}
+        <li><a href="{{ url_for('register') }}">Sign Up</a></li>
+        <li><a href="{{ url_for('login') }}">Login</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <div class="container" style="display: flex; height: calc(100vh - 70px);">
+    <!-- Sidebar -->
+    <div class="sidebar" style="width: 350px; padding: 20px; background-color: #f8f8f8; overflow-y: auto;">
+      <h2>Welcome, {{ first_name }}!</h2>
+      <p>You signed up with: <strong>{{ email }}</strong></p>
+
+      <div class="section-separator"></div>
+
+      <div class="user-stats">
+        <h3>Your Stats</h3>
+        <p><strong>Total Trees Planted:</strong> {{ total_trees }}</p>
+        <p><strong>Total CO₂ Offset:</strong> {{ total_offset }} Tonnes</p>
+      </div>
+
+      <div class="section-separator"></div>
+
+      <p id="zoominfo">Want a closer look? Hold Shift to zoom in and explore your planted trees.</p>
+
+      <div class="transaction-table">
+        <h3>Your Transactions</h3>
+        {% if transactions %}
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Trees Planted</th>
+                <th>Amount Paid</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for txn in transactions %}
+              <tr>
+                <td>{{ txn.trees }}</td>
+                <td>{{ txn.amount }}</td>
+                <td>{{ txn.status }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p>No transactions found.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Map & Zoom Lens -->
+    <div class="map-wrapper" style="flex-grow: 1; position: relative;">
+      <div id="map" style="height: 100%; width: 100%;"></div>
+
+      <!-- Zoom Viewer (stationary) -->
+      <div id="zoomView" style="
+        position: absolute;
+        bottom: 20px;
+        right: 20px;
+        width: 200px;
+        height: 200px;
+        background-color: #e8f5e9;
+        border-radius: 100px;
+        overflow: hidden;
+        z-index: 9999;
+        display: none;
+        pointer-events: none;
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      ">
+        <div id="zoom-map" style="width: 100%; height: 100%;"></div>
+      </div>
+    </div>
+  </div>
+</body>
+
+    <!-- Google Maps API -->
+    <script>
+        let map;
+        let zoomMap;
+        let zoomLensVisible = false;
+        let zoomView;
+        let lastMoveTime = 0;
+        let zoomMapInitialized = false;
+        
+        function initMap() {
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: { lat: -3.060452, lng: 40.162728 },
+                zoom: 19,
+                minZoom: 10,
+                maxZoom: 19,
+                mapTypeId: 'hybrid',
+                disableDefaultUI: true
+            });
+
+            loadW3WGrid();
+            loadUserOccupiedCells();
+            initZoomLens();
+        }
+
+        async function loadW3WGrid(mapTarget = map) {
+            const W3W_API_KEY = "{{ w3w_key }}";
+            const bounds = {
+                southwest: { lat: -3.065, lng: 40.158 },
+                northeast: { lat: -3.055, lng: 40.168 }
+            };
+            const url = `https://api.what3words.com/v3/grid-section?key=${W3W_API_KEY}&bounding-box=${bounds.southwest.lat},${bounds.southwest.lng},${bounds.northeast.lat},${bounds.northeast.lng}`;
+            
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                if (!data.lines) return;
+
+                data.lines.forEach(line => {
+                    new google.maps.Polyline({
+                        path: [
+                            { lat: line.start.lat, lng: line.start.lng },
+                            { lat: line.end.lat, lng: line.end.lng }
+                        ],
+                        geodesic: true,
+                        strokeColor: "#ffffff",
+                        strokeOpacity: 0.2,
+                        strokeWeight: 1,
+                        map: mapTarget
+                    });
+                });
+            } catch (err) {
+                console.error("❌ Grid load failed:", err);
+            }
+        }
+
+
+
+        async function loadUserOccupiedCells(mapTarget = map) {
+            try {
+                const res = await fetch("/get-user-cells");
+                const cells = await res.json();
+
+                if (res.status !== 200) {
+                    console.error("User cell fetch error:", cells.error);
+                    return;
+                }
+
+                cells.forEach(cell => {
+                    const lat = parseFloat(cell.lat);
+                    const lng = parseFloat(cell.lng);
+                    new google.maps.Rectangle({
+                        strokeColor: "#00FF00",
+                        strokeOpacity: 1,
+                        strokeWeight: 0.5,
+                        fillOpacity: 0,
+                        clickable: false,
+                        map: mapTarget,
+                        bounds: {
+                            north: lat + 0.000027,
+                            south: lat,
+                            east: lng + 0.000027,
+                            west: lng
+                        }
+                    });
+                });
+            } catch (err) {
+                console.error("❌ Cell draw failed:", err);
+            }
+        }
+
+
+        function initZoomLens() {
+            const zoomView = document.getElementById("zoomView");
+            const zoomMapDiv = document.getElementById("zoom-map");
+            let zoomMap;
+            let zoomMapInitialized = false;
+
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Shift") {
+                    zoomLensVisible = true;
+                    zoomView.style.display = "block";
+
+                    if (!zoomMapInitialized) {
+                        zoomMap = new google.maps.Map(zoomMapDiv, {
+                            center: map.getCenter(),
+                            zoom: map.getZoom(), // same zoom for now
+                            disableDefaultUI: true,
+                            gestureHandling: "none",
+                            draggable: false,
+                            mapTypeId: "hybrid",
+                            minZoom: 19,
+                            maxZoom: 19
+                        });
+
+                        // Draw grid + cells on zoomMap
+                        loadW3WGrid(zoomMap);
+                        loadUserOccupiedCells(zoomMap);
+
+                        zoomMapInitialized = true;
+                    }
+
+                    google.maps.event.trigger(zoomMap, "resize");
+                    zoomMap.setCenter(map.getCenter());
+                }
+            });
+
+            document.addEventListener("keyup", (e) => {
+                if (e.key === "Shift") {
+                    zoomLensVisible = false;
+                    zoomView.style.display = "none";
+                }
+            });
+
+            map.addListener("mousemove", (e) => {
+                if (!zoomMapInitialized || !zoomLensVisible) return;
+
+                const now = Date.now();
+                if (now - lastMoveTime < 100) return;
+                lastMoveTime = now;
+
+                zoomMap.setCenter(e.latLng);  // keep zoomMap centered on cursor
+            });
+        }
+
+
+            // Helper to copy canvas from original map into zoom view
+            function updateZoomCanvas() {
+                const mapCanvas = document.getElementById("map").querySelector("canvas");
+                if (mapCanvas) {
+                    const clone = mapCanvas.cloneNode(true);
+                    zoomView.innerHTML = "";
+                    zoomView.appendChild(clone);
+                }
+            }
+
+    </script>
+    <script>
+      function applySyntheticZoom() {
+        const zoomContainer = document.getElementById('zoom-map');
+
+        // Apply a zoom scale factor of 2
+        zoomContainer.style.transform = 'scale(2.5)';
+        zoomContainer.style.transformOrigin = 'center center';
+      }
+
+      // Trigger zoom effect when Shift is held
+      document.addEventListener('keydown', (e) => {
+        if (e.key === "Shift") {
+          document.getElementById("zoomView").style.display = "block";
+          applySyntheticZoom();
+        }
+      });
+
+      document.addEventListener('keyup', (e) => {
+        if (e.key === "Shift") {
+          const zoomContainer = document.getElementById("zoom-map");
+          zoomContainer.style.transform = 'scale(1)';
+          document.getElementById("zoomView").style.display = "none";
+        }
+      });
+    </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap" async defer></script>
+</body>
+</html>

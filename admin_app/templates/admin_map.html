@@ -1,0 +1,152 @@
+<!-- templates/admin_map.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Full Map - What3Trees</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        #map {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+
+        .admin-nav {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 10px 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 20px;
+        }
+
+        .admin-nav a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .admin-nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-nav">
+        <a href="/">Admin Panel</a>
+        <a href="/admin-users">Admin Users</a>
+        <a href="/admin-map">Full Map</a>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        function initMap() {
+            const center = { lat: -3.060452, lng: 40.162728 };
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: center,
+                zoom: 18,
+                minZoom: 10,
+                mapTypeId: 'hybrid',
+                disableDefaultUI: true
+            });
+
+            loadW3WGrid();
+            loadOccupiedCells();
+        }
+
+
+        async function loadW3WGrid() {
+            const W3W_API_KEY = "{{ w3w_key }}";
+            const boundingBox = {
+                southwest: { lat: -3.065, lng: 40.158 },
+                northeast: { lat: -3.055, lng: 40.168 }
+            };
+
+            const url = `https://api.what3words.com/v3/grid-section?key=${W3W_API_KEY}&bounding-box=${boundingBox.southwest.lat},${boundingBox.southwest.lng},${boundingBox.northeast.lat},${boundingBox.northeast.lng}`;
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+
+                if (!data.lines) return;
+
+                data.lines.forEach(line => {
+                    const gridLine = new google.maps.Polyline({
+                        path: [
+                            { lat: line.start.lat, lng: line.start.lng },
+                            { lat: line.end.lat, lng: line.end.lng }
+                        ],
+                        geodesic: false,
+                        strokeColor: "#ffffff",
+                        strokeOpacity: 0.8,
+                        strokeWeight: 0,
+                        map: map
+                    });
+                });
+
+                console.log(`✅ Loaded ${data.lines.length} W3W grid lines`);
+            } catch (err) {
+                console.error("❌ Failed to load W3W grid:", err);
+            }
+        }
+
+        async function loadOccupiedCells() {
+            try {
+                const response = await fetch("/get-allocated-cells");
+                const occupiedCells = await response.json();
+
+                if (occupiedCells.error) {
+                    console.error("❌ Failed to fetch occupied cells:", occupiedCells.error);
+                    return;
+                }
+
+                occupiedCells.forEach(cell => {
+                    const lat = parseFloat(cell.lat);
+                    const lng = parseFloat(cell.lng);
+
+                    const greenOutline = new google.maps.Rectangle({
+                        strokeColor: "#00FF00",  // green border
+                        strokeOpacity: 1,
+                        strokeWeight: 0.5,
+                        fillColor: null,          // no fill
+                        fillOpacity: 0,           // transparent
+                        map: map,
+                        bounds: {
+                            north: lat + 0.000027,
+                            south: lat,
+                            east: lng + 0.000027,
+                            west: lng
+                        }
+                    });
+                });
+
+                console.log(`✅ Loaded ${occupiedCells.length} occupied cells`);
+            } catch (err) {
+                console.error("❌ Error loading occupied cells:", err);
+            }
+        }
+
+    </script>
+
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{ maps_key }}&callback=initMap">
+    </script>
+</body>
+</html>

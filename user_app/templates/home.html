@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>What3Trees</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lora:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Lora:wght@400;600&display=swap');
+        body {
+            font-family: "Poppins", sans-serif; /* Primary font */
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to bottom, #f4f4f4, #e8f5e9); /* Light green gradient */
+            text-align: center;
+        }
+
+        nav {
+            background: #2c3e50;
+            color: white;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo img {
+            height: 60px; /* Adjust height as needed */
+            width: auto;  /* Maintain aspect ratio */
+            display: block;
+        }
+
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin: 0 15px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #1abc9c;
+        }
+        .container {
+            max-width: 600px;
+            margin: calc(100vh - 700px) auto 0; /* Moved up by 500px */
+            background: rgba(255, 255, 255, 0); 
+            padding: 25px;
+
+        }
+        h1, h2, h3 {
+            font-family: "Lora", serif; /* More organic & nature-inspired */
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        p {
+            font-family: "Poppins", sans-serif;
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .button-group {
+            margin: 20px 0;
+        }
+        button {
+            background: #1abc9c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #16a085;
+        }
+        input[type="number"] {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        .submit-button {
+            font-family: "Poppins", sans-serif;
+            font-weight: bold;
+            background: #e74c3c;
+        }
+        .submit-button:hover {
+            background: #c0392b;
+        }
+        /* Carbon Footprint Container */
+        .carbon-container {
+            max-width: 600px;
+            margin: 0 auto 0; /* 300px space above, 100px space below */
+            padding: 25px;
+            background: rgba(255, 255, 255, 0); 
+        }
+
+        .hidden {
+            display: none;
+        }
+        /* Selected Button Styling */
+        .tree-button {
+            font-family: "Poppins", sans-serif;
+            font-weight: bold;
+            background: #1abc9c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .tree-button:hover {
+            background: #16a085;
+        }
+
+        /* Highlight the selected button */
+        .tree-button.selected {
+            background: #0e7d68;
+            color: white;
+            font-weight: bold;
+            border: 2px solid #0b6b58;
+        }
+
+        /* Adjust logo spacing */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px; /* Less space above */
+            margin-bottom: 30px; /* Less space below */
+        }
+
+
+        .site-logo {
+            width: 500px; /* Adjust width to fit nicely */
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.2)); /* Adds a subtle shadow */
+        }
+
+        /* Improve CO₂ offset container spacing */
+        .co2-offset-container {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 100px;
+            font-family: "Poppins", sans-serif;
+            color: #2c3e50;
+            background: rgba(255, 255, 255, 0);  
+        }
+
+        .co2-offset-container h2 {
+            font-size: 22px;
+            margin-bottom: 5px;
+        }
+
+        .co2-offset-container h1 {
+            font-size: 48px;
+            color: #1abc9c;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .co2-offset-container p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        /* Map Explanation Container */
+        .map-info {
+            max-width: 800px;
+            margin: 50px auto 10px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0); 
+        }
+
+        .map-info h2 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .map-info p {
+            font-size: 16px;
+            color: #555;
+            line-height: 1.5;
+        }
+        .hidden {
+            display: none;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Section Separator */
+        .section-separator {
+            width: 80%; /* ✅ Matches content width */
+            margin: 50px auto; /* ✅ Adds proper spacing */
+            height: 2px;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0), #ccc, rgba(0, 0, 0, 0)); /* ✅ Smooth fade effect */
+            border-radius: 1px;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            width: 100%;
+            position: relative; /* Allows content to push it down naturally */
+            bottom: 0;
+            margin-top: 40px; /* Creates spacing between content and footer */
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+
+        .footer a {
+            color: #1abc9c;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+            margin: 0 10px;
+        }
+
+        .footer a:hover {
+            color: #16a085;
+            text-decoration: underline;
+        }
+        .footer p {
+            color: white;
+        }
+
+        #total-co2 {
+            font-size: 75px; /* Increase the font size */
+            font-weight: bold;
+            color: #1abc9c;
+        }
+        /* Google Map */
+        #map-container {
+            max-width: 90%;
+            height: 700px;
+            margin: 20px auto;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+  </style>
+
+  <script>
+    let map;
+
+    // ----------- INIT MAP + GRID + OCCUPIED CELLS -------------
+    function initMap() {
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: { lat: -3.060452, lng: 40.162728 },
+        zoom: 18,
+        minZoom: 10,
+        maxZoom: 19,
+        mapTypeId: "hybrid",
+        disableDefaultUI: true,
+        styles: [
+          { featureType: "poi", stylers: [{ visibility: "off" }] },
+          { featureType: "transit", stylers: [{ visibility: "off" }] },
+          { featureType: "road", elementType: "labels", stylers: [{ visibility: "off" }] },
+          { featureType: "administrative", elementType: "labels", stylers: [{ visibility: "off" }] }
+        ]
+      });
+
+      loadW3WGrid();
+      loadOccupiedCells();
+    }
+
+    async function loadW3WGrid() {
+      const W3W_API_KEY = "{{ w3w_key }}";
+      const bounds = { southwest: { lat: -3.065, lng: 40.158 }, northeast: { lat: -3.055, lng: 40.168 } };
+      const url = `https://api.what3words.com/v3/grid-section?key=${W3W_API_KEY}&bounding-box=${bounds.southwest.lat},${bounds.southwest.lng},${bounds.northeast.lat},${bounds.northeast.lng}`;
+      
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!data.lines) return;
+
+        data.lines.forEach(line => {
+          new google.maps.Polyline({
+            path: [
+              { lat: line.start.lat, lng: line.start.lng },
+              { lat: line.end.lat, lng: line.end.lng }
+            ],
+            geodesic: true,
+            strokeColor: "#ffffff",
+            strokeOpacity: 0,
+            strokeWeight: 0,
+            map
+          });
+        });
+      } catch (err) {
+        console.error("❌ Grid load failed:", err);
+      }
+    }
+
+    async function loadOccupiedCells() {
+      try {
+        const res = await fetch("/get-allocated-cells");
+        const cells = await res.json();
+        cells.forEach(cell => {
+          const lat = parseFloat(cell.lat);
+          const lng = parseFloat(cell.lng);
+          new google.maps.Rectangle({
+            strokeColor: "#00FF00",
+            strokeOpacity: 1,
+            strokeWeight: 0.5,
+            fillOpacity: 0,
+            map,
+            bounds: {
+              north: lat + 0.000027,
+              south: lat,
+              east: lng + 0.000027,
+              west: lng
+            }
+          });
+        });
+      } catch (err) {
+        console.error("❌ Cell draw failed:", err);
+      }
+    }
+
+    // ----------- UI INTERACTIONS -------------
+    function updateCarbonOffset(numTrees) {
+      let offset = (numTrees * 3.8).toFixed(1);
+      document.getElementById("carbon-offset").textContent = offset;
+    }
+
+    function selectTrees(num, button) {
+      document.getElementById("num_trees").value = num;
+      document.getElementById("custom-tree-input").value = "";
+      updateCarbonOffset(num);
+
+      document.querySelectorAll(".tree-button").forEach(btn => btn.classList.remove("selected"));
+      button.classList.add("selected");
+    }
+
+    function updateTreesFromInput() {
+      let val = parseInt(document.getElementById("custom-tree-input").value);
+      if (!isNaN(val) && val >= 1 && val <= 39999) {
+        document.getElementById("num_trees").value = val;
+        updateCarbonOffset(val);
+        document.querySelectorAll(".tree-button").forEach(btn => btn.classList.remove("selected"));
+      } else {
+        document.getElementById("num_trees").value = "";
+        document.getElementById("carbon-offset").textContent = "0";
+      }
+    }
+
+    function validateTreeSelection(e) {
+      if (!document.getElementById("num_trees").value) {
+        alert("Please select a number of trees.");
+        e.preventDefault();
+      }
+    }
+
+    function calculateTrees() {
+      const input = parseFloat(document.getElementById("carbon-input").value);
+      if (!isNaN(input) && input > 0) {
+        const trees = Math.ceil(input / 3.8);
+        document.getElementById("trees-needed").textContent = trees;
+        document.getElementById("recommended-trees").value = trees;
+        document.getElementById("checkout-carbon").classList.remove("hidden");
+      } else {
+        document.getElementById("trees-needed").textContent = "0";
+        document.getElementById("checkout-carbon").classList.add("hidden");
+      }
+    }
+
+    function checkoutCarbonOffset() {
+      const trees = document.getElementById("recommended-trees").value;
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = "/create-checkout-session";
+
+      const input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "num_trees";
+      input.value = trees;
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+
+    function fetchGlobalStats() {
+      fetch("/get-global-stats")
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("total-trees").textContent = data.totalTrees.toLocaleString();
+          document.getElementById("total-co2").textContent = data.totalCO2.toLocaleString();
+        })
+        .catch(err => console.error("Stats error:", err));
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      fetchGlobalStats();
+      document.getElementById("tree-form").addEventListener("submit", validateTreeSelection);
+    });
+  </script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_key }}&callback=initMap" async defer></script>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <a href="{{ url_for('home') }}">
+      <img src="{{ url_for('static', filename='images/what3trees_nav_logo.png') }}" alt="What3Trees Logo" />
+    </a>
+  </div>
+  <ul>
+    <li><a href="{{ url_for('home') }}">Home</a></li>
+    <li><a href="{{ url_for('about') }}">About</a></li>
+    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+    {% if session.get("user") %}
+      <li><a href="{{ url_for('user_trees') }}">My Trees</a></li>
+      <li><a href="{{ url_for('logout') }}">Logout</a></li>
+    {% else %}
+      <li><a href="{{ url_for('register') }}">Sign Up</a></li>
+      <li><a href="{{ url_for('login') }}">Login</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div class="logo-container">
+  <img src="{{ url_for('static', filename='images/what3trees_logo.png') }}" class="site-logo" />
+</div>
+
+<div class="co2-offset-container">
+  <p><strong><span id="total-trees">0</span></strong> trees have been planted, removing</p>
+  <h1 id="total-co2">0</h1>
+  <p>metric tonnes of CO₂ from the atmosphere.</p>
+</div>
+
+<div class="section-separator"></div>
+
+<div class="container">
+  <h2>Choose the number of trees you'd like to plant and help restore the coastal environment.</h2>
+  <p>Each tree removes <strong>3.8 tonnes of CO₂</strong> from the atmosphere.</p>
+
+  <form id="tree-form" method="POST" action="{{ url_for('create_checkout') }}">
+    <input type="hidden" id="num_trees" name="num_trees" value="" />
+
+    <div class="button-group">
+      <button type="button" class="tree-button" onclick="selectTrees(1, this)">1 Tree</button>
+      <button type="button" class="tree-button" onclick="selectTrees(10, this)">10 Trees</button>
+      <button type="button" class="tree-button" onclick="selectTrees(50, this)">50 Trees</button>
+      <button type="button" class="tree-button" onclick="selectTrees(100, this)">100 Trees</button>
+    </div>
+
+    <input type="number" id="custom-tree-input" min="1" max="39999" placeholder="Or enter a custom number (1-39999)" oninput="updateTreesFromInput()" />
+
+    <p><strong>Your purchase will remove:</strong> <span id="carbon-offset">0</span> tonnes of CO₂</p>
+    <button type="submit" class="submit-button">Proceed to Checkout</button>
+  </form>
+</div>
+
+<div class="section-separator"></div>
+
+<div class="carbon-container">
+  <h2>Calculate Your Carbon Footprint</h2>
+  <p>Enter your footprint (tonnes CO₂):</p>
+  <input type="number" id="carbon-input" placeholder="e.g. 14.2" oninput="calculateTrees()" />
+  <p>You need <strong><span id="trees-needed">0</span> trees</strong> to offset it.</p>
+  <input type="hidden" id="recommended-trees" />
+  <button id="checkout-carbon" class="hidden" onclick="checkoutCarbonOffset()">Offset with Trees</button>
+</div>
+
+<div class="section-separator"></div>
+
+<div class="map-info">
+  <h2>View All Trees Planted by What3Trees</h2>
+  <p>Each green square represents a tree planted through what3words.</p>
+</div>
+
+<div id="map-container">
+  <div id="map"></div>
+</div>
+
+<div class="section-separator"></div>
+
+<div class="footer">
+  <p>&copy; 2025 What3Trees. All rights reserved.</p>
+  <p>
+    <a href="{{ url_for('terms_and_conditions') }}">Terms & Conditions</a> |
+    <a href="{{ url_for('privacy_policy') }}">Privacy Policy</a>
+  </p>
+</div>
+
+</body>
+</html>
